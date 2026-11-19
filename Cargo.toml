@@ -1,0 +1,15 @@
+[package]
+name = "SigmaOS-deskland"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "SigmaOS Deskland — Web browser-based desktop environment clone"
+
+[lib]
+name = "sigmaos_deskland"
+path = "src/lib.rs"
+
+[dependencies]
+thiserror = "1"
+
+[dev-dependencies]

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SigmaOS Deskland — Web Desktop Environment</title>
+    <style>
+        :root {
+            --bg-color: #0f141c;
+            --surface-color: #1a222d;
+            --accent-color: #5b9bf8;
+            --text-color: #ffffff;
+            --text-muted: #8c9ba5;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        #desktop {
+            flex: 1;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .desktop-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 90px);
+            grid-auto-rows: 96px;
+            gap: 16px;
+        }
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.15s ease;
+        }
+        .desktop-icon:hover { background: rgba(255, 255, 255, 0.08); }
+        .desktop-icon .icon-glyph {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        .desktop-icon .label {
+            font-size: 11px;
+            color: var(--text-color);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            line-height: 1.2;
+            word-break: break-word;
+        }
+        /* Window styling */
+        .window {
+            position: absolute;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 320px;
+            min-height: 200px;
+        }
+        .titlebar {
+            height: 36px;
+            background: rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            cursor: move;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .titlebar .title { font-size: 12px; font-weight: 600; color: var(--text-color); }
+        .window-controls { display: flex; gap: 8px; }
+        .btn-control {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-close { background: #ff5f56; }
+        .btn-min { background: #ffbd2e; }
+        .btn-max { background: #27c93f; }
+        .window-content {
+            flex: 1;
+            padding: 16px;
+            background: #11161f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        /* Taskbar Panel */
+        #panel {
+            height: 44px;
+            background: rgba(15, 20, 28, 0.88);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            z-index: 10000;
+        }
+        .start-btn {
+            background: var(--accent-color);
+            color: #000;
+            font-weight: 700;
+            font-size: 12px;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+        .taskbar-tasks { display: flex; gap: 6px; margin-left: 12px; flex: 1; }
+        .task-item {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .task-item.active { background: rgba(91, 155, 248, 0.2); border-color: var(--accent-color); }
+        .systray { display: flex; align-items: center; gap: 14px; font-size: 12px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div id="desktop">
+        <div class="desktop-grid">
+            <div class="desktop-icon" onclick="openWindow('BetterOffice Docs', 'betteroffice-docs')">
+                <div class="icon-glyph">📄</div>
+                <div class="label">BetterOffice Docs</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('BetterOffice Sheets', 'betteroffice-sheets')">
+                <div class="icon-glyph">📊</div>
+                <div class="label">BetterOffice Sheets</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('Craft 3D Studio', 'craft-3d')">
+                <div class="icon-glyph">🎨</div>
+                <div class="label">Craft 3D</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('FreeDOS', 'dos-free')">
+                <div class="icon-glyph">💻</div>
+                <div class="label">FreeDOS</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('DuckDB Studio', 'rdbms-duckdb')">
+                <div class="icon-glyph">🗄️</div>
+                <div class="label">DuckDB</div>
+            </div>
+        </div>
+    </div>
+    <div id="panel">
+        <button class="start-btn">SigmaOS</button>
+        <div class="taskbar-tasks" id="taskbar-tasks"></div>
+        <div class="systray">
+            <span>ENG</span>
+            <span id="clock">12:00</span>
+        </div>
+    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let windowId = 1;
+        function openWindow(title, appId) {
+            const id = windowId++;
+            const win = document.createElement('div');
+            win.className = 'window';
+            win.id = 'win-' + id;
+            win.style.left = (80 + (id * 25) % 200) + 'px';
+            win.style.top = (60 + (id * 25) % 150) + 'px';
+            win.style.width = '700px';
+            win.style.height = '440px';
+            win.style.zIndex = id;
+
+            win.innerHTML = `
+                <div class="titlebar">
+                    <span class="title">${title}</span>
+                    <div class="window-controls">
+                        <button class="btn-control btn-min" onclick="minimizeWindow(${id})"></button>
+                        <button class="btn-control btn-max" onclick="maximizeWindow(${id})"></button>
+                        <button class="btn-control btn-close" onclick="closeWindow(${id})"></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <h3>SigmaOS ${title}</h3>
+                    <p style="margin-top: 8px;">Active application runtime connected to /apps/${appId}</p>
+                </div>
+            `;
+            document.getElementById('desktop').appendChild(win);
+            addTaskbarItem(id, title);
+        }
+
+        function closeWindow(id) {
+            const win = document.getElementById('win-' + id);
+            if (win) win.remove();
+            const tab = document.getElementById('task-' + id);
+            if (tab) tab.remove();
+        }
+
+        function minimizeWindow(id) {
+            const win = document.getElementById('win-' + id);
+            if (win) win.style.display = 'none';
+        }
+
+        function maximizeWindow(id) {
+            const win = document.getElementById('win-' + id);
+            if (win) {
+                if (win.dataset.maximized === 'true') {
+                    win.style.left = win.dataset.origLeft;
+                    win.style.top = win.dataset.origTop;
+                    win.style.width = win.dataset.origWidth;
+                    win.style.height = win.dataset.origHeight;
+                    win.dataset.maximized = 'false';
+                } else {
+                    win.dataset.origLeft = win.style.left;
+                    win.dataset.origTop = win.style.top;
+                    win.dataset.origWidth = win.style.width;
+                    win.dataset.origHeight = win.style.height;
+                    win.style.left = '0px';
+                    win.style.top = '0px';
+                    win.style.width = '100vw';
+                    win.style.height = 'calc(100vh - 44px)';
+                    win.dataset.maximized = 'true';
+                }
+            }
+        }
+
+        function addTaskbarItem(id, title) {
+            const tasks = document.getElementById('taskbar-tasks');
+            const item = document.createElement('div');
+            item.className = 'task-item active';
+            item.id = 'task-' + id;
+            item.innerText = title;
+            item.onclick = () => {
+                const win = document.getElementById('win-' + id);
+                if (win.style.display === 'none') {
+                    win.style.display = 'flex';
+                } else {
+                    win.style.zIndex = ++windowId;
+                }
+            };
+            tasks.appendChild(item);
+        }
+    </script>
+</body>
+</html>

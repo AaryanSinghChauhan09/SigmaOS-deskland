@@ -1,0 +1,16 @@
+[component]
+name = "SigmaOS-deskland"
+tier = 1
+stability = "beta"
+language = "rust"
+description = "SigmaOS Deskland — Web browser-based desktop environment clone"
+upstream = []
+
+[contract]
+provides = ["desktop-environment", "web-desktop", "window-manager"]
+depends_on = []
+
+[maturity]
+status = "Implemented"
+test_evidence = "Compiles and passes AAA unit and integration tests"
+next_milestone = "Production web deployment"
