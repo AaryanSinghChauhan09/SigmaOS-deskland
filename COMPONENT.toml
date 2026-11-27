@@ -1,0 +1,6 @@
+[component]
+name = "SigmaOS-deskland"
+description = "Desktop environment built on Wayland/Hyprland with a Rust configuration engine"
+category = "desktop-environment"
+license = "GPL-3.0-or-later"
+language = "rust"

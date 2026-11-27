@@ -1,0 +1,18 @@
+[package]
+name = "sigmaos-deskland"
+version = "0.1.0"
+edition = "2021"
+authors = ["SigmaOS Project"]
+description = "Desktop environment built on Wayland/Hyprland with a Rust configuration engine"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+toml = "0.8"
+
+[lib]
+name = "sigmaos_deskland"
+path = "src/lib.rs"
